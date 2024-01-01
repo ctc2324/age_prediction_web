@@ -221,6 +221,7 @@ from facenet_pytorch import MTCNN
 import torch
 from torch.utils.data import DataLoader
 from collections import Counter
+import shutil
 
 # MTCNN for face detection
 mtcnn = MTCNN(keep_all=True, device='cuda')
@@ -234,6 +235,7 @@ transform = transforms.Compose([
 
 # Define age ranges based on your training data
 age_ranges = ["1-2", "3-9", "10-20", "21-27", "28-45", "46-65", "66-116"]
+
 
 def display_image_with_ages(original_image, boxes, age_estimates):
     plt.imshow(np.array(original_image))
@@ -249,24 +251,47 @@ def display_image_with_ages(original_image, boxes, age_estimates):
     plt.savefig(f'{output_folder}/output.png')
     # plt.show()
 
+
+
+def save_ad_image(ad):
+    if 1 <= ad <= 7:
+        ad_filename = f'ad_{ad}.jpg'  # Format the ad file name with leading zero
+        ad_source_path = f'/home/itlab/ctc/python/age_prediction_for_several_1227/ads/{ad_filename}'  # Replace with your actual path to adS folder
+        output_folder = '/home/itlab/ctc/python/web/myproject/myproject/static'
+
+        # Ensure the output folder exists
+        os.makedirs(output_folder, exist_ok=True)
+
+        # Destination path for the ad image in the static folder
+        ad_dest_path = f'{output_folder}/ad.png'
+
+        # Copy the corresponding ad image to the static folder
+        shutil.copyfile(ad_source_path, ad_dest_path)
+
+        # Return the name of the saved ad image
+        return 'ad.png'
+    else:
+        return None  
+
+
 def show_ad(most_age):
 
   if(most_age == '3-9'):
-    return "ad_0"
+    return 0
   elif(most_age == '10-20'):
-    return "ad_1"
+    return 1
   elif(most_age == '10-20'):
-    return "ad_2"
+    return 2
   elif(most_age == '21-27'):
-    return "ad_3"
+    return 3
   elif(most_age == '28-45'):
-    return "ad_4"
+    return 4
   elif(most_age == '46-65'):
-    return "ad_5"
+    return 5
   elif(most_age == '66-116'):
-    return "ad_6"
+    return 6
   else:
-    return "No people, save the power"
+    return 7
 
 def predict_ages(image_path):
     # Load and process the image
@@ -320,7 +345,9 @@ def predict_ages(image_path):
         # print("The next most numerous range:", most_common_ages[1] if len(most_common_ages) > 1 else "None")
 
         ad = show_ad(most_common_ages[0][0])
-        print(ad + " for the people whose age in " + str(most_common_ages[0][0]))
+        print(ad)
+        save_ad_image(ad)
+        #print(ad + " for the people whose age in " + str(most_common_ages[0][0]))
 
         # Display the results
         display_image_with_ages(img, boxes, age_estimates)
@@ -335,7 +362,7 @@ def predict_ages(image_path):
         output_folder = '/home/itlab/ctc/python/web/myproject/myproject/static'
         #os.makedirs(output_folder, exist_ok=True)
         plt.savefig(f'{output_folder}/output.png')
-        
+        save_ad_image(7)
         # plt.show()
 
 """# Test our flow with images"""

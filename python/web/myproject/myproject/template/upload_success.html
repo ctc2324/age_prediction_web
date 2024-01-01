@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-{% load static %}
     <title>Upload Success</title>
+    {% load static %}
 </head>
 <body>
-    <h1>File Uploaded Successfully!</h1>
+    <h1>Your age are:</h1>
 
     <!-- Display the uploaded image -->
     <img src="{% static 'output.png' %}" alt="Uploaded Image" style="width: 50%; height: auto;">
+    <h2>You probably like:</h2>
+    <img src="{% static 'ad.png' %}" alt="Ad Image 0" style="width: 50%; height: auto;">
+    <!-- Display the ad image based on the return_code -->
 
 </body>
 </html>
